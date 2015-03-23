@@ -53,6 +53,9 @@ int main(int argc, char *argv[] )
   }
 
   printf("Port Number is %s \n",argv[1] );
+
+while(1)
+{
  
   struct  addrinfo host_info;
   struct  addrinfo  *host_list;//host_pointer is to store info 
@@ -127,27 +130,27 @@ int main(int argc, char *argv[] )
    cout<<"new done \n";
      
 
-  while(1)
-     {
-
-         int rec = recv ( new_sock , input , maxn , 0);
  
-         print(rec);
-         print(input);
-         print( strlen(input) );
+ int rec = recv ( new_sock , input , maxn , 0);
 
-         cout<<" no processing the input\n";
+ print(rec);
+ print(input);
+ print( strlen(input) );
 
-         
+ cout<<" no processing the input\n";
 
-         string ans = solve();
+ 
 
-         int sent = send( new_sock ,ans.c_str(), ans.size(), 0 );
+ string ans = solve();
 
-         print(sent);
-         
-	 cout<<"sending successfull\n";
-      }
+ int sent = send( new_sock ,ans.c_str(), ans.size(), 0 );
+
+ print(sent);
+ 
+ cout<<"sending successfull\n";
+
+}
+     
      
 
   return 0;
