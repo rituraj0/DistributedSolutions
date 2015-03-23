@@ -16,6 +16,32 @@ string solve()
 {
   //inout is incoming 
 
+  string in_st = input;
+
+  vector<ll> in = decode_input(in_st);
+ 
+  ll lf = -(1LL<<60);
+ 
+  ll tp=0;
+  for(int i=0;i<((int)in.size());i++)
+     {
+       tp+=in[i];
+       lf=max(lf,tp);
+     }
+
+  ll rt =  -(1LL<<60);
+      tp=0;
+
+  for(int i = ((int)in.size())-1;i>=0;i--)
+   {
+      tp+=in[i];
+      rt=max(rt, tp);
+  }
+
+
+  return to_string(lf) + " " + to_string(rt);
+}
+
 int main(int argc, char *argv[] )
 {
 
