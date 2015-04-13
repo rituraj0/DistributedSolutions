@@ -48,15 +48,12 @@ int main(int argc, char *argv[] )
   //argc should be 2 for correct execution
   if ( argc != 2 )
   {
-        printf( "usage: %s port_number \n", argv[0] );
-	return 0;
+      printf( "usage: %s port_number \n", argv[0] );
+	    return 0;
   }
 
   printf("Port Number is %s \n",argv[1] );
 
-while(1)
-{
- 
   struct  addrinfo host_info;
   struct  addrinfo  *host_list;//host_pointer is to store info 
 
@@ -96,9 +93,10 @@ while(1)
 
 
   int yes = 1;
-        // reuse if previous version was running due to xyz
+  // reuse if previous version was running due to xyz
   status = setsockopt( sockid , SOL_SOCKET , SO_REUSEADDR , &yes , sizeof(int) );
 
+  //bind here 
   status = bind( sockid , host_list->ai_addr , host_list->ai_addrlen );
 
   if( status == -1 )
@@ -122,36 +120,40 @@ while(1)
 
   struct sockaddr_storage their_addr;
   socklen_t addr_size = sizeof(their_addr);
-  int new_sock = accept(sockid, (struct sockaddr *)&their_addr, &addr_size);
 
-  if( new_sock == -1)
-   cout<<" some error while  creating a "<<gai_strerror(status)<<endl;
-  else
-   cout<<"new done \n";
+  //since on clinet side ,we are always creating a socket  ( BAD design lekin chalega )
+  //to send , always ecpect server to create a new socket to recive and process data
+
+  while(1)
+  {
+      int new_sock = accept(sockid, (struct sockaddr *)&their_addr, &addr_size);
+
+      if( new_sock == -1)
+       cout<<" some error while  creating a "<<gai_strerror(status)<<endl;
+      else
+       cout<<" ********* Acceted new request  *********** \n\n";
+         
+
      
+     int rec = recv ( new_sock , input , maxn , 0);
 
- 
- int rec = recv ( new_sock , input , maxn , 0);
+     print(rec);
+     print(input);
+     print( strlen(input) );
 
- print(rec);
- print(input);
- print( strlen(input) );
+     cout<<" no processing the input\n";     
 
- cout<<" no processing the input\n";
+     string ans = solve();
 
- 
+     int sent = send( new_sock ,ans.c_str(), ans.size(), 0 );
 
- string ans = solve();
+     print(sent);
 
- int sent = send( new_sock ,ans.c_str(), ans.size(), 0 );
-
- print(sent);
- 
- cout<<"sending successfull\n";
-
-}
+     close( new_sock);
      
-     
+      cout<<" ********* served new request  *********** \n\n";
+  }
 
+         
   return 0;
 }

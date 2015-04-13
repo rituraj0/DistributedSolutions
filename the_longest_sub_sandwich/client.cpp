@@ -6,7 +6,8 @@
 using namespace std;
 #define print(a) cout<<(#a)<<" = "<<a<<"\n";
 
-#define server_count 3
+#define server_count 1
+
 string server_ip[] = {"localhost","localhost","localhost"};
 string server_port[] = { "5556", "5557" , "5558"};
 
@@ -14,9 +15,14 @@ string server_port[] = { "5556", "5557" , "5558"};
 ll input[maxn];
 ll rt_ans[maxn];
 ll lf_ans[maxn];
+
+//int sockid[maxn];// socket id . if created 
+
 int n;
 
 //TODO: do it using pthreads
+
+
 void solve(int id )//assign task to server {id}, and find result 
 {
   // TODO : for simplicity assume that n%server_count == 0
@@ -73,27 +79,27 @@ void solve(int id )//assign task to server {id}, and find result
   else
    cout<<"connected succesfully \n";
 
-  while(1)
-     {
- 	//send 
-         int sent = send( sockid , to_send.c_str(), to_send.size() , 0 );
+	//send 
+   int sent = send( sockid , to_send.c_str(), to_send.size() , 0 );
 
-         print(sent);
-         
-         char incoming[5000];
-         int rec = recv ( sockid , incoming , 5000 , 0);
- 
-         string ret = incoming;
+   print(sent);
+   
+   char incoming[5000];
+   int rec = recv ( sockid , incoming , 5000 , 0);
 
-         pair<ll,ll> ans  = decode_result( ret );
+   string ret = incoming;
 
-         lf_ans[id]=ans.first;
-         rt_ans[id]=ans.second;
+   cout<<"Incoming is "<<ret<<endl;
 
-         return;//NO pthread here , so have to return 
+   pair<ll,ll> ans  = decode_result( ret );
 
-      }
-     
+   lf_ans[id]=ans.first;
+   rt_ans[id]=ans.second;
+
+   close(sockid);
+   return;//NO pthread here , so have to return 
+
+       
 }
 
 int main()
@@ -105,34 +111,34 @@ int main()
       cin>>n;
  
       for(int i=0;i<n;i++)
- 	cin>>input[i];
+ 	       cin>>input[i];
 
       for(int i=0;i<server_count; i++)
-	solve(i);
+	         solve(i);
 
-     ll ans = 0 ;
+      ll ans = 0 ;
 
       ll tp = 0;
 
       for(int i=0;i<server_count;i++)
-	{
+	      {
           tp+=lf_ans[i];
           ans = max( ans , tp );
         }
 
-	print(tp);
+	     print(tp);
 
          tp = 0 ;
 
        for(int i= server_count -1 ; i >=0 ; i--)
          {
 
-            tp+=rt_ans[i];
+             tp+=rt_ans[i];
 
              ans = max( ans , tp );
          }
 
-	print(tp);
+	       print(tp);
 
         cout<<" final asnwer is "<<ans<<endl;
 
