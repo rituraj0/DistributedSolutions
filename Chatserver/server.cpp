@@ -27,16 +27,21 @@ void *talktoclient( void *sockID)
 	while(1)
 	{
 
-	     int recv ( new_sock , input , maxn , 0);  
+	     int gs = recv ( new_sock , input , maxn , 0);  
 
 	     string got = string( input);
 
+	     cout<<"Got is "<<got<<"   and got size is "<<gs<<endl;
+
 	     string ans = prefix +" "+" sent: "+got;
+
+	     printf("About to send: %s  ",ans.c_str() );
 
 	     //if( got =="exit")
 	     	//ans= prefix + "  
 
          int sent = send( new_sock ,ans.c_str(), ans.size(), 0 );
+         printf("Sent size is %d",sent);
 
     }
 
@@ -124,6 +129,7 @@ int main(int argc, char *argv[] )
       {
 			pthread_t tid;
 			pthread_create(&tid, NULL, talktoclient, (void*)new_sock);
+			pthread_detach(tid);
       }
 
   }
