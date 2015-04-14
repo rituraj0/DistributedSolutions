@@ -26,6 +26,7 @@ void *talktoclient( void *sockID)
        
 	while(1)
 	{
+		cout<<" *******\n";
 
 	     int gs = recv ( new_sock , input , maxn , 0);  
 
@@ -35,13 +36,15 @@ void *talktoclient( void *sockID)
 
 	     string ans = prefix +" "+" sent: "+got;
 
-	     printf("About to send: %s  ",ans.c_str() );
+	     printf("About to send: %s  \n",ans.c_str() );
 
 	     //if( got =="exit")
 	     	//ans= prefix + "  
 
+	     ans = "hi";
+
          int sent = send( new_sock ,ans.c_str(), ans.size(), 0 );
-         printf("Sent size is %d",sent);
+         printf("Sent size is %d \n",sent);
 
     }
 

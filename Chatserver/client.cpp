@@ -46,6 +46,8 @@ void solve(int id )//assign task to server {id}, and find result
 
   while(1)
   {
+    cout<<" *******\n";
+    
     string to_send="hello";
 
     cin>>to_send;
@@ -57,7 +59,7 @@ void solve(int id )//assign task to server {id}, and find result
     char incoming[5000];
     recv ( sockid , incoming , 5000 , 0);
 
-    string ret = incoming;
+    string ret = (string)incoming;
 
     print(to_send);
     print(ret);
