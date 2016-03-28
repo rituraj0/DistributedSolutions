@@ -207,6 +207,7 @@ func main() {
 		if instanceTime := instance.TimeRunning + instance.TimeBlocked; instanceTime >= maxTime {
 			maxTime = instanceTime
 			lastInstance = i
+			fmt.Fprintf(os.Stderr, "Duration: %v (Instance: %d)\n", instanceTime, i)
 		}
 	}
 	fmt.Fprintf(os.Stderr, "Duration: %v (longest running instance: %d)\n", maxTime, lastInstance)
