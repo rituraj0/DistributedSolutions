@@ -18,22 +18,33 @@ int main() {
   high_resolution_clock::time_point startTime = high_resolution_clock::now();
 
   long long sum = 0LL;
+
   for (long long pos = MyNodeId(); pos < GetN(); pos += NumberOfNodes()) {
     sum += GetNumber(pos);
   }
-  if (MyNodeId() > 0) {
-    Receive(MyNodeId() - 1);
-    sum += GetLL(MyNodeId() - 1);
+
+  int masterNodeId = 0;
+
+  if (MyNodeId() == masterNodeId) {
+      // masterNodeId is working as master
+      // All nodes will send sum to master
+      for (int nodeId = 0; nodeId < NumberOfNodes(); nodeId++) {
+          if(nodeId != masterNodeId) {
+            Receive(nodeId);
+            sum += GetLL(nodeId);
+          }
+      }
   }
-  if (MyNodeId() < NumberOfNodes() - 1) {
-    PutLL(MyNodeId() + 1, sum);
-    Send(MyNodeId() + 1);
+
+  if (MyNodeId() != masterNodeId) {
+    PutLL(masterNodeId, sum);
+    Send(masterNodeId);
   } else {
     printf("%lld\n", sum);
   }
 
   high_resolution_clock::time_point endTime = high_resolution_clock::now();
-  printf("Node: %d, StartTime: %d, endTime: %d, TimeTaken: %f ms\n", MyNodeId(), startTime, endTime, std::chrono::duration_cast<duration<double>>(endTime - startTime));
+  printf("Node: %d, StartTime: %d, endTime: %d, TimeTaken: %f ms\n", MyNodeId(), startTime, endTime, 1000*std::chrono::duration_cast<duration<double>>(endTime - startTime));
 
   return 0;
 }
